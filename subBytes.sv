@@ -7,6 +7,8 @@ subBytes module
 
 */
 
+// calculate inverse then shifting for one byte 
+// genvar to generate the whole 2D matrix 
 module subBytes(in, out);
 	input logic [7:0] in [3:0][3:0];
     output logic [7:0] out [3:0][3:0];
