@@ -16,6 +16,7 @@ module subBytes_byte(clk_i, rst_i, byte_i, byte_o);
 
     // ---------- 1. multiplicative inverse ---------- 
     // b^-1 = b^254 = b^128 * b^64 * b^32 * b^16 * b^8 * b^4 * b^2
+	 assign byte_2pow[0] = byte_i; // never used
     gf_square byte2 (.byte_i(byte_i), .square_o(byte_2pow[1]));
     gf_square byte4 (.byte_i(byte_2pow[1]), .square_o(byte_2pow[2]));
     gf_square byte8 (.byte_i(byte_2pow[2]), .square_o(byte_2pow[3]));
@@ -31,7 +32,7 @@ module subBytes_byte(clk_i, rst_i, byte_i, byte_o);
 
     gf_mult mult4 (.a_i(byte_2pow[7]), .b_i(b64xb32), .product_o(b128xb64xb32));
     gf_mult mult5 (.a_i(b16xb8), .b_i(b4xb2), .product_o(b16xb8xb4xb2));
-    gf_mult mult6 (.a_i(b128xb64xb32), .b_i(b16xb8xb4xb2), .product_o(inv_p));
+    gf_mult mult6 (.a_i(b128xb64xb32), .b_i(b16xb8xb4xb2), .product_o(inv_n));
 
     // ---------- 2. xor right shift ----------
     assign inv_rs4 = inv_n >> 4;
@@ -43,18 +44,19 @@ module subBytes_byte(clk_i, rst_i, byte_i, byte_o);
     assign byte_o = inv_n ^ inv_rs4 ^ inv_rs5 ^ inv_rs6 ^ inv_rs7 ^ c;
     
     // reset register 
-    always_ff @(posedge clk_i) begin 
-        if (rst_i) begin 
-            byte_o <= 8'h00;
-        end else begin 
-            inv_n <= inv_p;
-        end
-    end
+//    always_ff @(posedge clk_i) begin 
+//        if (rst_i) begin 
+//            inv_n <= 8'h00;
+//        end else begin 
+//            inv_n <= inv_p;
+//        end
+//    end
 
 endmodule 
 
 module subBytes_byte_tb();
-    logic [7:0] clk_i, rst_i, byte_i, byte_o;
+    logic clk_i, rst_i;
+	 logic [7:0] byte_i, byte_o;
 
     subBytes_byte dut (.clk_i, .rst_i, .byte_i, .byte_o);
 
@@ -68,11 +70,12 @@ module subBytes_byte_tb();
 
         rst_i <= 1; @(posedge clk_i);
         rst_i <= 0; @(posedge clk_i);
+        byte_i <= 8'h57; @(posedge clk_i);
         byte_i <= 8'h13; @(posedge clk_i);
-        byte_i <= 8'h01; @(posedge clk_i);
         @(posedge clk_i);
         @(posedge clk_i);
         @(posedge clk_i);
         @(posedge clk_i);
+		  $stop;
     end
 endmodule 

@@ -3,7 +3,6 @@ module gf_square(byte_i, square_o);
     output logic [7:0] square_o;
 
     logic [7:0] bytex02, bytex04, bytex08, bytex10, bytex20, bytex40, bytex80;
-    logic [7:0] temp_square;
 
     // precompute all possible xTime values for 1 byte
     xTimes2 Bytex02 (.b_i(byte_i), .b_o(bytex02));
@@ -16,19 +15,18 @@ module gf_square(byte_i, square_o);
 
     // xor non-zero bits together to get square output 
     always_comb begin 
-        temp_square = 8'h00;
+        square_o = 8'h00;
 
-        if (byte_i[0]) temp_square ^= byte_i;
-        if (byte_i[1]) temp_square ^= bytex02;
-        if (byte_i[2]) temp_square ^= bytex04;
-        if (byte_i[3]) temp_square ^= bytex08;
-        if (byte_i[4]) temp_square ^= bytex10;
-        if (byte_i[5]) temp_square ^= bytex20;
-        if (byte_i[6]) temp_square ^= bytex40;
-        if (byte_i[7]) temp_square ^= bytex80;
+        if (byte_i[0]) square_o ^= byte_i;
+        if (byte_i[1]) square_o ^= bytex02;
+        if (byte_i[2]) square_o ^= bytex04;
+        if (byte_i[3]) square_o ^= bytex08;
+        if (byte_i[4]) square_o ^= bytex10;
+        if (byte_i[5]) square_o ^= bytex20;
+        if (byte_i[6]) square_o ^= bytex40;
+        if (byte_i[7]) square_o ^= bytex80;
     end
 
-    assign temp_square = square_o; 
 endmodule 
 
 module gf_square_tb();
