@@ -4,4 +4,5 @@
 
 ## Algorithms
 1. Advanced Encryption Standard (AES)
-2. Module-Lattice-Based Key Encapsulation Mechanism Standard
+2. SHA-512/256
+3. Module-Lattice-Based Key Encapsulation Mechanism Standard
